@@ -1,0 +1,1845 @@
+### PostalZip API Usage
+
+This Data Type works in conjunction with the Countries plugins to generate country-specific postal/zip formats 
+for consistency of data across each row. For example:
+
+
+```
+United Kingdom      01552 515219
+Canada              (604) 264-2551
+United Kingdom      01512 215441
+```
+
+### Example 
+
+```javascript
+{
+    "numRows": 10,
+    "countries": ["united_kingdom", "US"], 
+    "rows": [
+        {
+            "type": "Country",
+            "title": "Country Name",
+            "settings": {
+                "limitCountriesToSelectedPlugins": true
+            }
+        },
+        { 
+            "type": "PostalZip",
+            "title": "Regional Postal/Zip Format",
+            "settings": {
+                "countries": ["united_kingdom", "US"]
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Country Data Type
+
+This Data Type generates a random country name. It can be used in two ways:
+1. Generates a random country name from the ~250 countries in the world. 
+2. Generates a random country name from the list of Country plugins. 
+ 
+The Country plugins provide a much richer set of data for use by the Data Generator. Each plugin defines not just the 
+country name, but a list of its regions and cities. It can also define things like postal/zip formats, phone number 
+formats and more - anything specific to the country. The benefit to using the country plugins is when you 
+use multiple, related data types like `Country`, `Region` and `City`: it ensures that each row of data is consistent 
+and that the city names belong to the region, which belongs to the country. 
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "countries": ["CA", "US", "united_kingdom"],
+    "rows": [
+        {
+            "type": "Country",
+            "title": "Country",
+            "settings": {
+                "limitCountriesToSelectedPlugins": true
+            }
+        },
+        {
+            "type": "Region",
+            "title": "Region",
+            "settings": {
+                "countries": {
+                    "CA": { "full": true, "short": false },
+                    "US": { "full": true, "short": false },
+                    "united_kingdom": { "full": true, "short": false }
+                }
+            }
+        },
+        {
+            "type": "City",
+            "title": "City"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Track1 Data Type
+
+This Data Type generates a random Track1 number.
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "Track1",
+            "title": "track 1"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## NamesRegional Data Type
+
+This Data Type tries to generate a name that's likely to occur in a particular country. Right now it only 
+supports France and Italy, but can be expanded for other countries. 
+
+
+### Example API Usage
+
+Just POST the following JSON content to: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 50,
+    "countries": ["france", "italy"],
+    "rows": [
+        {
+            "type": "Country",
+            "title": "Country",
+            "settings": {
+                "limitCountriesToSelectedPlugins": true
+            }
+        },
+        {
+            "type": "Names",
+            "title": "Male name",
+            "settings": {
+                "placeholder": "MaleName"
+            }
+        },
+        {
+            "type": "Names",
+            "title": "Female name",
+            "settings": {
+                "placeholder": "FemaleName"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## List Data Type
+
+This Data Type generates a item from a random list. 
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "List",
+            "title": "Colour",
+            "settings": {
+                "listType": "exactly", 
+                "exactly": 1,
+                "list": "red|orange|yellow|green|blue|indigo|violet"
+            }
+        },
+        {
+            "type": "List",
+            "title": "Numbers",
+            "settings": {
+                "listType": "atMost", 
+                "atMost": 3,
+                "list": "1|2|3|4|5"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## PAN Data Type
+
+This Data Type generates a *valid* Personal Access Number (PAN) for a variety of credit card types.  
+
+- *brand*: the credit card name. Options: `mastercard, visa, visaElectron, amex, discover, carteBlanche, dinersClubInt,
+dinersClubEnRoute, jcb, maestro, solo, switch, laser, rand_card`. The last item is special. If it's entered, you need to 
+include the *random_card* setting as well. 
+to generate from.
+- *separator*: defaults to space ` `. The separator character 
+- *format*: an array of possible formats to output the CC number.
+- *length*: this one's a bit confusing, honestly. You need to pass in a list of comma-delimited lengths of possible
+credit card lengths. [But aren't they defined in the format list?]
+- *random_card*: an array of credit card names to indicate the subset of credit card types to generate.
+
+
+### Example API Usage
+
+This generates a Visa number. Just POST the following JSON content to: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 50,
+    "rows": [
+        {
+            "type": "PAN",
+            "title": "cc_num",
+            "settings": {
+                "brand": "visa",
+                "format": ["XXXX XXXX XXXX XXXX", "XXX XXXXX XXXXX XXX"],
+                "length": "16"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## NormalDistribution Data Type
+
+This Data Type generates a random distribution based on a mean and a standard deviation.
+
+
+### Example API Usage
+
+Just POST the following JSON content to: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 50,
+    "rows": [
+        {
+            "type": "NormalDistribution",
+            "title": "val",
+            "settings": {
+                "mean": "0.7",
+                "sigma": "1"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Date Data Type
+
+This Data Type generates a random date in a particular format. 
+
+- the `fromDate` and `toDate` settings should be in the format DD/MM/YYYY
+- the `placeholder` setting should define a date format as per the [PHP date function](http://php.net/manual/en/function.date.php).
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "Date",
+            "title": "Date",
+            "settings": {
+                "fromDate": "01/01/2015",
+                "toDate": "01/01/2020",
+                "placeholder": "F jS, Y"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Names Data Type
+
+This Data Type generates a human name. You can choose to generate first names, a male first name, a female first name,
+a surname and an initial. 
+
+
+### Example API Usage
+
+Here are a couple of examples. Just POST the following JSON content to 
+`http://[your site]/[generate data folder]/api/v1/data`:
+
+```javascript
+{
+    "numRows": 15,
+    "rows": [
+        {
+            "type": "Names",
+            "title": "Name",
+            "settings": {
+                "placeholder": "Name"
+            }
+        },
+        {
+            "type": "Names",
+            "title": "Male name",
+            "settings": {
+                "placeholder": "MaleName"
+            }
+        },
+        {
+            "type": "Names",
+            "title": "Female name",
+            "settings": {
+                "placeholder": "FemaleName"
+            }
+        },
+        {
+            "type": "Names",
+            "title": "Full name",
+            "settings": {
+                "placeholder": "Name Surname"
+            }
+        },
+        {
+            "type": "Names",
+            "title": "Full name with initial",
+            "settings": {
+                "placeholder": "Name Initial. Surname"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## PIN Data Type
+
+This Data Type generates a four character PIN.
+
+
+### Example API Usage
+
+Just POST the following JSON content to: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "PIN",
+            "title": "pin"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## AutoIncrement Data Type
+
+This Data Type generates auto-increment sequences as number of strings in a variety of different ways. Note: for the 
+increment placeholder strings check out the documentation for this Data Type, found within the generatedata UI.
+
+### Example API Usage
+
+This example generates a couple of auto-increment values: 
+- 1, 2, 3, 4, ...
+- 100B, 95B, 90B, 85B, ...
+
+POST the following JSON content to `http://[your site]/[generate data folder]/api/v1/data`:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AutoIncrement",
+            "title": "Simple increment",
+            "settings": {
+                "incrementStart": 1,
+                "incrementValue": 1
+            }
+        },
+        {
+            "type": "AutoIncrement",
+            "title": "Decrement with placeholder",
+            "settings": {
+                "incrementStart": 100,
+                "incrementValue": -5,
+                "incrementPlaceholder": "{$INCR}B"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## IBAN Data Type
+
+This Data Type generates a random International Bank Account Number (IBAN).
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "IBAN",
+            "title": "IBAN"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Composite Data Type
+
+This Data Type lets you grab the content from other generate rows and manipulate that information however you need.
+
+
+### Example API Usage
+
+This example generates 2 rows of random numbers, then 2 rows of Composite fields that use the random numbers. To 
+use this, POST the following JSON content to `http://[your site]/[generate data folder]/api/v1/data`:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "NumberRange",
+            "title": "Random Num 1",
+            "settings": {
+                "rangeMin": 1, 
+                "rangeMax": 100
+            }
+        },
+        {
+            "type": "NumberRange",
+            "title": "Random Num 2",
+            "settings": {
+                "rangeMin": 1, 
+                "rangeMax": 100
+            }
+        },
+        {
+            "type": "Composite",
+            "title": "Num 1 + Num 2",
+            "settings": {
+                "placeholder": "{$ROW1+$ROW2}"
+            }
+        },
+        {
+            "type": "Composite",
+            "title": "Display the original nums",
+            "settings": {
+                "placeholder": "Values: {$ROW1}, {$ROW2}"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+
+Notes:
+- This Data Type always outputs strings.
+- The `{$ROW1}` placeholders get switched out with the generated value in the `rows` array. So the first index == `{$ROW1}` 
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Email Data Type
+
+This Data Type generates a random email address. 
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "Email",
+            "title": "Email"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Constant Data Type
+
+This Data Type generates a constant value (any string / number) for N rows, then switches to another constant. You can 
+control the size of N and the list of constants to be inserted. Basically it lets you do things like give half your 
+generated data set one value for a field, and the second half a different value. 
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "Constant",
+            "title": "A couple o' constants",
+            "settings": {
+                "loopCount": 5,
+                "values": "One|Two"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Tree Data Type
+
+The idea of this Data Type is to generate a tree structure by mapping the rows of your generated results into
+a heirarchy. The way it works is that you use this in conjuction with an `AutoIncrement` field - or any Data Type 
+whose generated content is unique, such as the `GUID` Data Type. You target that column, then specify the possibly
+number of siblings. 
+
+Here's an example, but it's best to try out the API usage (or generatedata UI) and play around with the values
+to really understand it. 
+
+```
+Auto Inc    Parent ID (Tree)
+1           0
+2           1
+3           2
+4           1
+5           3   
+6           2
+7           3
+```
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AutoIncrement",
+            "title": "Simple increment",
+            "settings": {
+                "incrementStart": 1,
+                "incrementValue": 1
+            }
+        },
+        {
+            "type": "Tree",
+            "title": "Parent ID", 
+            "settings": {
+                "autoIncRowNum": 1,
+                 "maxSiblings": 2
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Track2 Data Type
+
+This Data Type generates a random Track2 number.
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "Track2",
+            "title": "track 2"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## TextFixed Data Type
+
+This Data Type generates a fixed number of random words.  
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "TextRandom",
+            "title": "text",
+            "settings": {
+                "startsWithLipsum": false,
+                "minWords": 2,
+                "maxWords": 10
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## NumberRange Data Type
+
+This Data Type generates a number.
+
+
+### Example API Usage
+
+This generates a number between 1 and 100. Just POST the following JSON content to: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 50,
+    "rows": [
+        {
+            "type": "NumberRange",
+            "title": "num",
+            "settings": {
+                "rangeMin": 1,
+                "rangeMax": 100
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## TextFixed Data Type
+
+This Data Type generates a random number of random words, taken from lorem ipsum. You can specify the min and max
+number of words. 
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "TextFixed",
+            "title": "text",
+            "settings": {
+                "numWords": 5 
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Phone Data Type
+
+This Data Type generates a phone number with a simple search-replace algorithm. Any `X`'s in the placeholder
+string are replaced with 1-9; any `x`'s (lowercase) are replaced with 0-9. 
+
+
+### Example API Usage
+
+Just POST the following JSON content to: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 50,
+    "rows": [
+        {
+            "type": "Phone",
+            "title": "phone_num",
+            "settings": {
+                "placeholder": "1-Xxx-Xxx-xxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+Tip: to generate random formats, just include multiple values for the placeholder field in the string, separated by a `|` pipe
+character. The generator will pick one of the formats at random.
+
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## AlphaNumeric Data Type
+
+This Data Type generates random alphanumeric strings according to whatever format you want. Note: for the 
+placeholder strings, documentation for this Data Type in the generatedata UI. That provides the list of available
+placeholders.
+
+### Example API Usage
+
+This example generates random passwords and US Zipcodes. POST the following JSON content to 
+`http://[your site]/[generate data folder]/api/v1/data`:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "Random Password",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "US Zipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## PhoneRegional
+
+The idea of this data type is to generate phone numbers in a format that's appropriate for a particular country. In 
+other words, it lets you generate multiple rows of data where the random country name and phone number formats match, e.g.
+ 
+```
+United Kingdom      01552 515219
+Canada              (604) 264-2551
+United Kingdom      01512 215441
+```
+
+Generating data for this Data Type via the API is a little fussy, compared to the UI. Definitely needs some more thought.
+
+
+### Example API Usage
+
+```javascript
+{
+    
+    "countries": ["united_kingdom", "US"], 
+    "rows": [
+        {
+            "type": "Country",
+            "title": "Country!",
+            "settings": {
+                "limitCountriesToSelectedPlugins": true
+            }
+        },
+        { 
+            "type": "PhoneRegional",
+            "title": "Regional Phone Format",
+            "settings": {
+                "regions": {
+                    "united_kingdom": "0xxxx xxxxxx",
+                    "US": "1 (AAA) Xxx-xxxx"
+                }
+            }
+        }
+    ]
+    ...
+}
+```
+
+Notes:
+- Normally the UI handles the generation and presentation of the actual regional phone formats and you just select 
+them, but for the API you need to explictly pass those values. To find out what they are, you can either use the 
+generatedata UI to see, or browse the source code of the Country plugins.
+- The `countries` array should contain all country slugs you're interested in. To find those out, either look at the 
+database's `[prefix]countries` table, or look at the top of the Country class files:
+(`/plugins/countries/[country]/[country].class.php`).
+- the `regions` object property keys are also *country slugs*, not the country names.
+- Like with the UI, if you don't enter any regions it will just show any old phone number format for any region.
+
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Region Data Type
+
+This Data Type generates a random region. A region is something like a State, Province or County - whatever is 
+applicable for a particular country.
+
+This works by parsing all Country plugins in the system and using the region information there as the pool of region 
+names to pull from.
+
+
+### Example API Usage
+
+This shows how to generate a region in a particular format for a particular country.
+
+```javascript
+{
+    "numRows": 100,
+    "countries": ["CA", "US", "united_kingdom"],
+    "rows": [
+        {
+            "type": "Region",
+            "title": "Canadian Province (full)",
+            "settings": {
+                "countries": {
+                    "CA": { "full": true, "short": false }
+                }
+            }
+        },
+        {
+            "type": "Region",
+            "title": "Canadian Province (short)",
+            "settings": {
+                "countries": {
+                    "CA": { "full": false, "short": true }
+                }
+            }
+        },
+        {
+            "type": "Region",
+            "title": "UK County",
+            "settings": {
+                "countries": {
+                    "united_kingdom": { "full": true, "short": true }
+                }
+            }
+        },
+        {
+            "type": "Region",
+            "title": "US State or Canadian Province",
+            "settings": {
+                "countries": {
+                    "CA": { "full": true, "short": true },
+                    "US": { "full": true, "short": true }
+                }
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+This second example shows you how to generate a Country and a Region, where the two are correctly mapped. Only Provinces 
+appear for Belgium, and only States for Nigeria.
+
+Basically the `settings` values for the Region row define the formats of what you want; the generator does the work 
+of matching them up.
+
+```javascript
+{
+    "numRows": 10,
+    "countries": ["nigeria", "belgium"],
+    "rows": [
+        {
+            "type": "Country",
+            "title": "Country",
+            "settings": {
+                "limitCountriesToSelectedPlugins": true
+            }
+        },
+        {
+            "type": "Region",
+            "title": "Region",
+            "settings": {
+                "countries": {
+                    "nigeria": { "full": true, "short": false },
+                    "belgium": { "full": true, "short": false }
+                }
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## City Data Type
+
+Generates a random city name.
+
+### Example API Usage
+
+POST the following JSON content to: `http://[your site]/[generate data folder]/api/v1/data`:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "City",
+            "title": "City name"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## StreetAddress Data Type
+
+This Data Type generates a street address. 
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "StreetAddress",
+            "title": "Address"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## CVV Data Type
+
+This Data Type generates a random CVV Number for a credit card.
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "CVV",
+            "title": "CVV"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## LatLng Data Type
+
+This Data Type generates a latitude / longitude.
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "LatLng",
+            "title": "Latitude",
+            "settings": {
+                "lat": true,
+                "lng": false
+            }
+        },
+        {
+            "type": "LatLng",
+            "title": "Longitude",
+            "settings": {
+                "lat": false,
+                "lng": true
+            }
+        },
+        {
+            "type": "LatLng",
+            "title": "Lat/Lng",
+            "settings": {
+                "lat": true,
+                "lng": true
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## GUID Data Type
+
+This Data Type generates a random GUID of the form: *HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH*  
+
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "GUID",
+            "title": "GUID"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Currency Data Type
+
+This Data Type generates a random monetary amount. It's pretty versatile and can be used for many, if not all country
+currencies. 
+
+### Example API Usage
+
+```javascript
+{
+    "numRows": 20,
+    "rows": [
+        {
+            "type": "Currency",
+            "title": "Currency",
+            "settings": {
+                "format": "XX,XXX",
+                "rangeFrom": "5000",
+                "rangeTo": "10000",
+                "symbol": "$",
+                "symbolLocation": "prefix"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "complex"
+        }
+    }
+}
+```
+ 
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## Company Data Type
+
+Generates a random company name.
+
+### Example API Usage
+
+POST the following JSON content to: `http://[your site]/[generate data folder]/api/v1/data`:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "Company",
+            "title": "Company name"
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## XML Export Type
+
+This Export Type lets you generate your random data in XML format. You can use this plugin in one of two ways:
+
+1. Rely on the plugin generating the XML structure by just passing in `rootNodeName` and `recordNodeName` settings, 
+which govern the key node names, or
+2. Pass in a `useCustomExportFormat` (true) and a `customTemplate` setting that contains a Smarty template to 
+control the generated markup.
+ 
+See below for an example of each.
+
+
+### Example API Usage
+
+Here's a simple example that uses the `rootNodeName` and `recordNodeName` setting to generate the XM content. Just 
+POST the following JSON content to the following API path: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 15,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "RandomPassword",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "USZipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "XML",
+        "settings": {
+            "rootNodeName": "rows",
+            "recordNodeName": "row"
+        }
+    }
+}
+```
+
+Here's a second example. Like with the HTML Export Type, you can provide your own custom Smarty template to generate
+the XML with. It's ungainly and a pain, since you need to serialize your template into a JSON string, but the option is
+there if you want it.
+
+```javascript
+{
+    "numRows": 15,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "RandomPassword",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "USZipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "XML",
+        "settings": {
+            "useCustomExportFormat": true,
+            "customTemplate": "{if $isFirstBatch}<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<records>\n{/if}{foreach $rowData as $row}  <record>{foreach from=$colData item=col name=c}    <{$col}>{$row[$smarty.foreach.c.index]}</{$col}>{/foreach}  </record>{/foreach}{if $isLastBatch}</records>{/if}"
+        }
+    }
+}
+```
+
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## JSON Export Type
+
+The JSON Export Type generates the random data in JSON format. It provides a couple of simple options:
+
+- `stripWhitespace` to keep file size down 
+- `dataStructureFormat`: this should be set to a string, and can be `simple` or `complex` - `simple` means that it 
+outputs a simple array of objects, with each object being grouped in key-value pairs based on whatever title you entered
+for the row; `complex` arranges the generated content differently: it groups the generated data into two top level 
+properties, like this:
+
+```javascript
+{
+	"cols": [
+		"name",
+		"email"
+	],
+	"data": [
+		[
+		    "Tom Filkin",
+			"eu.odio.Phasellus@utodio.net"
+		],
+		[
+		    "Ed Phillips",
+			"vulputate.velit.eu@metus.edu"
+		],
+		[
+		    "Sally Etkins",
+			"ut@et.net"
+		]
+	]
+}
+```
+
+
+### Example API Usage
+
+To generate JSON data using the API, you need to specify the JSON Export Type in the `export` setting and post the 
+JSON content to here: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+Here's an example pulled from the AlphaNumeric Data Type example:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "Random Password",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "US Zipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "JSON",
+        "settings": {
+            "stripWhitespace": false,
+            "dataStructureFormat": "simple"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## ProgrammingLanguage Export Type
+
+This plugin generates data in a variable in a variety of programming languages. It's super easy to add more, so 
+please go right ahead and add one!
+
+There's only a single setting: `language`, which should be a string containing one of the following options:
+- `PHP`
+- `Perl`
+- `JavaScript` (note that this and the other options are case-sensitive!)
+- `Ruby`
+
+### Example API Usage
+
+Post the following JSON content to the following API path: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 15,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "Random Password",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "US Zipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "ProgrammingLanguage",
+        "settings" {
+            "language": "Perl"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## CSV Export Type
+
+The CSV Export Type generates the random data in CSV format. It provides a couple of simple options:
+
+- `delimiter`: the character used to delimit columns 
+- `eol`: the end of line character to use. For this setting, pass a string corresponding to the eol you want to 
+use: `Windows`, `Unix` or `Mac`. These correspond to `\r\n`, `\n` and `\r` respectively.
+
+
+### Example API Usage
+
+Try POSTing the following JSON content to the following URL:
+`http://[your site]/[generate data folder]/api/v1/data`
+
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AutoIncrement",
+            "title": "Row",
+            "settings": {
+                "incrementStart": 1,
+                "incrementValue": 1
+            }
+        },
+        {
+            "type": "Names",
+            "title": "name",
+            "settings": {
+                 "placeholder": "Name Initial. Surname"
+            }
+        }
+    ],
+    "export": {
+        "type": "CSV",
+        "settings": {
+            "delimiter": "|",
+            "eol": "Unix"
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## SQL Export Type
+
+This plugin is probably the most configurable Export Type currently available. It allows you to generate the random 
+data in SQL format for use in populating database such as MySQL, Oracle, SQLite and more. It offers a range of controls
+to generate exactly what you want: table names, database types, query type (INSERT/UPDATE), INSERT IGNORE, Primary Keys
+and others. Pretty cool.
+
+Using the Data Generator interface you can just select whatever options you want using your mouse & keyboard,
+but if you're using the API, these are the settings you'll be interested in.
+
+- `tableName`: the string name of the database table to insert/update the data. *required*
+- `databaseType`: a string. One of: `MySQL`, `Postgres`, `SQLite`, `Oracle`, `MSSQL`. *required* 
+- `createTable`: a boolean, defaults to `true`. If this is set to true, the generated output will contain a 
+`CREATE TABLE` query at the start.
+- `dropTable`: a boolean, defaults to `false`. If this is set to true, the first generated query will be a safe 
+DROP TABLE to ensure the table doesn't already exist prior to the INSERT queries.
+- `encloseWithBackquotes`: a boolean, defaults to `false`. Whether column and table names will be enclosed in backquotes.
+- `statementType`: a string, one of: `insert`, `insertignore`, `update`. This governs the type of query that'll be 
+generated. By and large you'll want this to be set to `insert`, the default value. 
+- `insertBatchSize`: an integer. This allows you to reduce the number of queries by grouping them, e.g. a single
+INSERT statement to insert 10 rows at once. Defaults to 1.
+- `addPrimaryKey`: a boolean, defaults to `false`. This lets you choose to add a Primary Key field to your SQL 
+statements.
+
+#### Conditional settings
+
+Some settings are database specific. 
+
+- Postgres will ignore the `encloseWithBackquotes` setting.
+- Postgres, SQLite, Oracle and MSSQL won't accept the `insertignore` as a value for the `statementType` setting. That 
+only works with MySQL.
+
+
+### Example API Usage
+
+Post the following JSON content to the following API path: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 15,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "Random Password",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "US Zipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "SQL",
+        "settings": {
+            "tableName": "myTable",
+            "databaseType": "MySQL",
+            "encloseWithBackquotes": true,
+            "createTable": true
+        }
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## LDIF Export Type
+
+This plugin generates data in LDIF (LDAP Data Exchange Format).
+
+
+### Example API Usage
+
+Post the following JSON content to the following API path: 
+`http://[your site]/[generate data folder]/api/v1/data`
+
+Here's an example pulled from the AlphaNumeric Data Type example:
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AlphaNumeric",
+            "title": "Random Password",
+            "settings": {
+                "placeholder": "LLLxxLLLxLL"
+            }
+        },
+        {
+            "type": "AlphaNumeric",
+            "title": "US Zipcode",
+            "settings": {
+                "placeholder": "xxxxx"
+            }
+        }
+    ],
+    "export": {
+        "type": "LDIF"
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+## HTML Export Type
+
+This plugin outputs the data in HTML format. You can either choose to output the data in a `<table>`, a `<ul>` or 
+`<dl>`'s, or if you're feeling really fancy, you can control the exact output via a custom Smarty template. The 
+latter's intended for advanced users and requires knowledge of the PHP Smarty templating language
+
+### Example API Usage
+
+Try POSTing the following JSON content to the following URL:
+`http://[your site]/[generate data folder]/api/v1/data`
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AutoIncrement",
+            "title": "Row",
+            "settings": {
+                "incrementStart": 1,
+                "incrementValue": 1
+            }
+        },
+        {
+            "type": "Names",
+            "title": "name",
+            "settings": {
+                "placeholder": "Name Initial. Surname"
+            }
+        }
+    ],
+    "export": {
+        "type": "HTML",
+        "settings": {
+            "exportFormat": "table"
+        }
+    }
+}
+```
+
+### Custom template example
+
+Here's a second example that uses a custom Smarty template to customize the generated HTML. Note: the inconvenient 
+thing about using the API for this is that you need to serialize the template into a single line. Yeah, that's a pain. 
+
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AutoIncrement",
+            "title": "Row",
+            "settings": {
+                "incrementStart": 1,
+                "incrementValue": 1
+            }
+        },
+        {
+            "type": "Names",
+            "title": "name",
+            "settings": {
+                "placeholder": "Name Initial. Surname"
+            }
+        }
+    ],
+    "export": {
+        "type": "HTML",
+        "settings": {
+            "exportFormat": "custom",
+            "customTemplate": "{if $isFirstBatch}<table cellspacing=\"0\" cellpadding=\"1\">\n<tr>\n{foreach $colData as $col}  <th>{$col}</th>\n{/foreach}\n</tr>\n{/if}{foreach $rowData as $row}<tr>\n{foreach $row as $r}  <td>{$r}</td>\n{/foreach}</tr>\n{/foreach}{if $isLastBatch}</table>{/if}"
+        }
+    }
+}
+```
+
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)
+
+## Excel Export Type
+
+This Export Type generates the random data in Excel format. It uses the `PHPExcel` library to handle the 
+actual file generation.
+
+It's super-simple, and doesn't offer any additional settings to control any aspects of the generated Excel file.
+
+### Example API Usage
+
+Try POSTing the following JSON content to the following URL:
+`http://[your site]/[generate data folder]/api/v1/data`
+
+Please note: this Export Type prompts for a download. I'm not 100% sure that will work with a REST call - if the result
+can be easily extracted and created, so let me know if not and I'll figure out a way to remove the `attachment` headers
+if called via the API.
+
+```javascript
+{
+    "numRows": 10,
+    "rows": [
+        {
+            "type": "AutoIncrement",
+            "title": "Row",
+            "settings": {
+                "incrementStart": 1,
+                "incrementValue": 1
+            }
+        },
+        {
+            "type": "Names",
+            "title": "name",
+            "settings": {
+                 "placeholder": "Name Initial. Surname"
+            }
+        }
+    ],
+    "export": {
+        "type": "Excel"
+    }
+}
+```
+
+### API help
+
+For more information about the API, check out:
+[http://benkeen.github.io/generatedata/api.html](http://benkeen.github.io/generatedata/api.html)

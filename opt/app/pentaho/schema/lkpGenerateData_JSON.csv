@@ -1,0 +1,30 @@
+datatype;JSON_Code
+autoincrement;{ "type": "AutoIncrement", "title": "ID", "settings": { "incrementStart": 1, "incrementValue": 1 } } 
+boolean;{ "type": "List", "title": "@Titleholder", "settings": { "listType": "exactly", "exactly":1, "list": "TRUE|FALSE"}}
+city;{"type": "City","title": "@Titleholder"}
+combobox;{ "type": "List", "title": "@Titleholder", "settings": { "listType": "exactly", "exactly":1,"list": "@Picklistholder" } } 
+company;{ "type": "Company", "title": "@Titleholder" } 
+country;{ "type": "Constant", "title": "@Titleholder", "settings": { "loopCount": 1,"values": "United States"}} 
+currency;{ "type": "Currency", "title": "@Titleholder", "settings": { "format": "XX,XXX", "rangeFrom": "5000", "rangeTo": "10000", "symbol": "$", "symbolLocation": "prefix" } }
+datetime;{ "type": "Date", "title": "@Titleholder", "settings": { "fromDate": "01/01/2000", "toDate": "09/20/2015", "placeholder": "Y-m-d\\TH:i:s" } } 
+date;{ "type": "Date", "title": "@Titleholder", "settings": { "fromDate": "01/01/2000", "toDate": "01/01/2015", "placeholder": "Y-m-d" } } 
+decimal;{ "type": "NumberRange", "title": "@Titleholder", "settings": { "rangeMin": 1, "rangeMax": 100 } } 
+email;{ "type": "Email", "title": "@TitleHolder" } 
+firstname;{ "type": "Names", "title": "@TitleHolder", "settings": { "placeholder": "Name" }}
+int;{ "type": "NumberRange", "title": "@Titleholder", "settings": { "rangeMin": 1, "rangeMax": 100 } } 
+lastname;{ "type": "Names", "title": "@TitleHolder", "settings": { "placeholder": "Surname" } }
+latitude;{ "type": "LatLng", "title": "@TitleHolder", "settings": { "lat": true, "lng": false } } 
+longitude;{ "type": "LatLng", "title": "@TitleHolder", "settings": { "lat": false, "lng": true } } 
+multipicklist;{ "type": "List", "title": "@Titleholder", "settings": { "listType": "atMost", "atMost":2,"list": "@Picklistholder" } } 
+name;{ "type": "Names", "title": "@TitleHolder", "settings": { "placeholder": "Name" }}
+objname;{ "type": "AutoIncrement", "title": "@Titleholder", "settings": { "incrementStart": 1, "incrementValue": 1, "incrementPlaceholder": "@Objtitleholder_{$INCR}" } }
+phone;{ "type": "Phone", "title": "@Titleholder", "settings": { "placeholder": "Xxx-Xxx-xxxx" } } 
+picklist;{ "type": "List", "title": "@Titleholder", "settings": { "listType": "exactly", "exactly":1,"list": "@Picklistholder" } } 
+postalcode;{ "type":"PostalZip", "title":"@Titleholder", "settings":{ "countries":["US"] } }
+reference;{ "type": "AutoIncrement", "title": "@Titleholder", "settings": { "incrementStart": 1, "incrementValue": 1, "incrementPlaceholder": "@Parenttitleholder_{$INCR}" } }
+state;{ "type": "Region", "title": "@Titleholder", "settings": { "countries": { "US": { "full": true, "short": false } } } } 
+streetaddress;{ "type": "StreetAddress", "title": "@Titleholder" }
+textarea;{ "type": "TextRandom", "title": "@Titleholder", "settings": { "startsWithLipsum": false, "minWords": 2, "maxWords": 10 } } 
+time;{ "type": "Date", "title": "@Titleholder", "settings": { "fromDate": "01/01/2015", "toDate": "01/01/2020", "placeholder": "H:i:s" } } 
+url;{ "type": "Constant", "title": "@Titleholder", "settings": { "loopCount": 1,"values": "http://sample.generateddata.com"}} 
+string;{ "type": "TextFixed", "title": "@Titleholder", "settings": { "numWords": 1 } } 
